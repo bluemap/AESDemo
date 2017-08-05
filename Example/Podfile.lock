@@ -1,0 +1,16 @@
+PODS:
+  - AESDemo (0.1.0)
+
+DEPENDENCIES:
+  - AESDemo (from `../`)
+
+EXTERNAL SOURCES:
+  AESDemo:
+    :path: "../"
+
+SPEC CHECKSUMS:
+  AESDemo: 5e520134fd3d0791eb50b18026003bcb95cbad2b
+
+PODFILE CHECKSUM: 3bb33cfa4e046e81bee1c0bbc3329c33e9bd02e9
+
+COCOAPODS: 1.2.1

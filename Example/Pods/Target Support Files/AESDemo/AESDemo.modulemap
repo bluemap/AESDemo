@@ -1,0 +1,6 @@
+framework module AESDemo {
+  umbrella header "AESDemo-umbrella.h"
+
+  export *
+  module * { export * }
+}
