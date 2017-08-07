@@ -7,12 +7,12 @@
 //
 
 #import "AESViewController.h"
-#import "AESCrypt.h"
-#import "NSString+Base64.h"
+#import "CocoaSecurity.h"
 #import <Foundation/Foundation.h>
 
 
 #define kPHPBaseURL @"http://100.84.250.23/aes.php?"
+#define kIV @"280f8bb8c43d532f" //向量长度必须是16
 
 @interface AESViewController ()
 
@@ -52,7 +52,7 @@
     self.secTextSeed = [[UITextView alloc] initWithFrame:frame];
     self.secTextSeed.backgroundColor = [UIColor greenColor];
     self.secTextSeed.textColor = [UIColor redColor];
-    self.secTextSeed.text = @"TestEncodeSeed";
+    self.secTextSeed.text = @"280f8bb8c43d532f389ef0e2a5321220";//key长度必须是16、24、32 三种
     [self.view addSubview:self.secTextSeed];
     
     frame = CGRectMake(0, CGRectGetMaxY(frame)+5, 320, 20);
@@ -124,7 +124,8 @@
     NSString *message = self.inputView.text;
     if (secSeed && message)
     {
-        NSString *encodeMessage = [AESCrypt encrypt:message password:secSeed];
+        CocoaSecurityResult *result = [CocoaSecurity aesEncrypt:message hexKey:secSeed hexIv:kIV];
+        NSString *encodeMessage = result.base64;
         if (encodeMessage)
         {
             self.encreptTextView.text = encodeMessage;
@@ -144,7 +145,8 @@
     NSString *encodeMessage = self.encreptTextView.text;
     if (encodeMessage)
     {
-        NSString *decodeMessage = [AESCrypt decrypt:encodeMessage password:secSeed];
+        CocoaSecurityResult *result = [CocoaSecurity aesDecryptWithBase64:encodeMessage hexKey:secSeed hexIv:kIV];
+        NSString *decodeMessage = result.utf8String;
         if (decodeMessage)
         {
             self.iosDecreptTextView.text = decodeMessage;
@@ -166,7 +168,7 @@
     
     NSString *secSeed = self.secTextSeed.text;
     NSString *message = self.inputView.text;
-    NSString *url = [NSString stringWithFormat:@"%@type=encode&seed=%@&message=%@",kPHPBaseURL,[self urlEncodeUsingEncoding:secSeed],[self urlEncodeUsingEncoding:message]];
+    NSString *url = [NSString stringWithFormat:@"%@type=encode&key=%@&message=%@&iv=%@",kPHPBaseURL,[self urlEncodeUsingEncoding:secSeed],[self urlEncodeUsingEncoding:message],kIV];
     NSURL *URL = [NSURL URLWithString:url];
     
     [[[NSURLSession sharedSession]dataTaskWithURL:URL completionHandler:^(NSData * _Nullable data, NSURLResponse * _Nullable response, NSError * _Nullable error) {
@@ -193,8 +195,8 @@
 - (void)phpDecreptBtnClicked:(id)sender
 {
     NSString *secSeed = self.secTextSeed.text;
-    NSString *message = self.inputView.text;
-    NSString *url = [NSString stringWithFormat:@"%@type=decode&seed=%@&message=%@",kPHPBaseURL,[self urlEncodeUsingEncoding:secSeed],[self urlEncodeUsingEncoding:message]];
+    NSString *encodeMessage = self.encreptTextView.text;
+    NSString *url = [NSString stringWithFormat:@"%@type=decode&key=%@&message=%@&iv=%@",kPHPBaseURL,[self urlEncodeUsingEncoding:secSeed],[self urlEncodeUsingEncoding:encodeMessage],kIV];
     NSURL *URL = [NSURL URLWithString:url];
     
     [[[NSURLSession sharedSession]dataTaskWithURL:URL completionHandler:^(NSData * _Nullable data, NSURLResponse * _Nullable response, NSError * _Nullable error) {

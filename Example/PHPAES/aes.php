@@ -1,17 +1,18 @@
 <?php
-	require 'GibberishAES.php'; // class
 
 	$type = $_GET["type"];
-	$secseed = $_GET["seed"];
+	$key = $_GET["key"];
 	$message = $_GET["message"];
+	$iv = $_GET["iv"];
 
-	if ($type && $secseed && $message)
+	if ($type && $key && $message && $iv)
 	{
-		GibberishAES::size(256);
 		if (0 == strcmp($type,"encode"))
 		{
 			# 加密并输出加密字串
-			$encodeMessage = GibberishAES::enc($message, $secseed);
+			$ciphertext = mcrypt_encrypt(MCRYPT_RIJNDAEL_128, $key,
+                                 $message, MCRYPT_MODE_CBC, $iv);
+			$encodeMessage = base64_encode($ciphertext);
 
 			if ($encodeMessage) 
 			{
@@ -25,7 +26,11 @@
 		else if (0 == strcmp($type,"decode")) 
 		{
 			# 解密并输出解密字符串
-			$decodeMessage = GibberishAES::dec($message, $secseed);
+			$decodeMessage = base64_decode($message);
+			$decodeMessage = mcrypt_decrypt(MCRYPT_RIJNDAEL_128, $key,
+                                 $decodeMessage, MCRYPT_MODE_CBC, $iv);
+			
+
 			if ($decodeMessage) 
 			{
 				echo $decodeMessage;
