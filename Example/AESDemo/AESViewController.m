@@ -13,11 +13,14 @@
 
 #define kPHPBaseURL @"http://100.84.250.23/aes.php?"
 #define kIV @"280f8bb8c43d532f" //向量长度必须是16
+#define kKey @"280f8bb8c43d532f389ef0e2a5321220" //key长度必须是16、24、32 三种
 
 @interface AESViewController ()
 
 
-@property (nonatomic, retain) UITextView *secTextSeed;//密钥串
+@property (nonatomic, retain) UIButton *keyCreateBtn;
+@property (nonatomic, retain) UITextView *secKey;//密钥串
+@property (nonatomic, retain) UITextView *viText;//vi
 @property (nonatomic, retain) UILabel *secText;     //输入密文：
 @property (nonatomic, retain) UITextView *inputView; //密文
 @property (nonatomic, retain) UIButton *iOSEncreptBtn;   //ios加密
@@ -48,12 +51,28 @@
 
 - (void)prepareSubViews
 {
-    CGRect frame = CGRectMake(0, 40, 320, 30);
-    self.secTextSeed = [[UITextView alloc] initWithFrame:frame];
-    self.secTextSeed.backgroundColor = [UIColor greenColor];
-    self.secTextSeed.textColor = [UIColor redColor];
-    self.secTextSeed.text = @"280f8bb8c43d532f389ef0e2a5321220";//key长度必须是16、24、32 三种
-    [self.view addSubview:self.secTextSeed];
+    CGRect frame = CGRectMake(0, 40, 140, 30);
+    self.keyCreateBtn = [[UIButton alloc] initWithFrame:frame];
+    [self.keyCreateBtn setTitle:@"生成Key和Vi" forState:UIControlStateNormal];
+    [self.keyCreateBtn addTarget:self action:@selector(createKeyAndViBtnClicked:) forControlEvents:UIControlEventTouchUpInside];
+    self.keyCreateBtn.backgroundColor = [UIColor greenColor];
+    [self.view addSubview:self.keyCreateBtn];
+    
+    frame = CGRectMake(0, CGRectGetMaxY(frame)+5, 320, 30);
+    self.secKey = [[UITextView alloc] initWithFrame:frame];
+    self.secKey.backgroundColor = [UIColor greenColor];
+    self.secKey.textColor = [UIColor redColor];
+    self.secKey.text = kKey;//key长度必须是16、24、32 三种
+    self.secKey.userInteractionEnabled = NO;
+    [self.view addSubview:self.secKey];
+    
+    frame = CGRectMake(0, CGRectGetMaxY(frame)+5, 320, 30);
+    self.viText = [[UITextView alloc] initWithFrame:frame];
+    self.viText.backgroundColor = [UIColor greenColor];
+    self.viText.textColor = [UIColor redColor];
+    self.viText.text = kIV;//vi长度必须是16
+    self.viText.userInteractionEnabled = NO;
+    [self.view addSubview:self.viText];
     
     frame = CGRectMake(0, CGRectGetMaxY(frame)+5, 320, 20);
     self.secText = [[UILabel alloc] initWithFrame:frame];
@@ -120,11 +139,12 @@
     self.iosDecreptTextView.text = nil;
     self.phpDecreptTextView.text = nil;
     
-    NSString *secSeed = self.secTextSeed.text;
+    NSString *secSeed = self.secKey.text;
+    NSString *vi = self.viText.text;
     NSString *message = self.inputView.text;
     if (secSeed && message)
     {
-        CocoaSecurityResult *result = [CocoaSecurity aesEncrypt:message hexKey:secSeed hexIv:kIV];
+        CocoaSecurityResult *result = [CocoaSecurity aesEncrypt:message hexKey:secSeed hexIv:vi];
         NSString *encodeMessage = result.base64;
         if (encodeMessage)
         {
@@ -141,11 +161,12 @@
 
 - (void)iosDecreptBtnClicked:(id)sender
 {
-    NSString *secSeed = self.secTextSeed.text;
+    NSString *key = self.secKey.text;
+    NSString *vi = self.viText.text;
     NSString *encodeMessage = self.encreptTextView.text;
     if (encodeMessage)
     {
-        CocoaSecurityResult *result = [CocoaSecurity aesDecryptWithBase64:encodeMessage hexKey:secSeed hexIv:kIV];
+        CocoaSecurityResult *result = [CocoaSecurity aesDecryptWithBase64:encodeMessage hexKey:key hexIv:vi];
         NSString *decodeMessage = result.utf8String;
         if (decodeMessage)
         {
@@ -166,9 +187,10 @@
     self.iosDecreptTextView.text = nil;
     self.phpDecreptTextView.text = nil;
     
-    NSString *secSeed = self.secTextSeed.text;
+    NSString *key = self.secKey.text;
+    NSString *vi = self.viText.text;
     NSString *message = self.inputView.text;
-    NSString *url = [NSString stringWithFormat:@"%@type=encode&key=%@&message=%@&iv=%@",kPHPBaseURL,[self urlEncodeUsingEncoding:secSeed],[self urlEncodeUsingEncoding:message],kIV];
+    NSString *url = [NSString stringWithFormat:@"%@type=encode&key=%@&message=%@&iv=%@",kPHPBaseURL,[self urlEncodeUsingEncoding:key],[self urlEncodeUsingEncoding:message],vi];
     NSURL *URL = [NSURL URLWithString:url];
     
     [[[NSURLSession sharedSession]dataTaskWithURL:URL completionHandler:^(NSData * _Nullable data, NSURLResponse * _Nullable response, NSError * _Nullable error) {
@@ -194,9 +216,10 @@
 
 - (void)phpDecreptBtnClicked:(id)sender
 {
-    NSString *secSeed = self.secTextSeed.text;
+    NSString *key = self.secKey.text;
+    NSString *vi = self.viText.text;
     NSString *encodeMessage = self.encreptTextView.text;
-    NSString *url = [NSString stringWithFormat:@"%@type=decode&key=%@&message=%@&iv=%@",kPHPBaseURL,[self urlEncodeUsingEncoding:secSeed],[self urlEncodeUsingEncoding:encodeMessage],kIV];
+    NSString *url = [NSString stringWithFormat:@"%@type=decode&key=%@&message=%@&iv=%@",kPHPBaseURL,[self urlEncodeUsingEncoding:key],[self urlEncodeUsingEncoding:encodeMessage],vi];
     NSURL *URL = [NSURL URLWithString:url];
     
     [[[NSURLSession sharedSession]dataTaskWithURL:URL completionHandler:^(NSData * _Nullable data, NSURLResponse * _Nullable response, NSError * _Nullable error) {
@@ -217,6 +240,31 @@
     }] resume];
 }
 
+- (void)createKeyAndViBtnClicked:(UIButton *)sender
+{
+    NSString *UUID = [self createUUID];
+    if (UUID.length > 32)
+    {
+        NSInteger keyLen = 32;
+        NSInteger rand = arc4random()%3;
+        if (rand == 0)
+        {
+            //key 设置16位长度
+            keyLen = 16;
+        }
+        else if(rand == 1)
+        {
+            //key 设置24位长度
+            keyLen = 24;
+        }
+        
+        NSString *key = [UUID substringToIndex:keyLen];
+        NSString *vi = [UUID substringFromIndex:UUID.length - 16];
+        self.secKey.text = key;
+        self.viText.text = vi;
+    }
+}
+
 - (NSString *)urlEncodeUsingEncoding:(NSString *)text
 {
     return (NSString *)CFBridgingRelease(CFURLCreateStringByAddingPercentEscapes(
@@ -225,6 +273,19 @@
                                                                                  NULL,
                                                                                  (CFStringRef)@"!*'\"();:@&=+$,/?%#[]% ",
                                                                                  CFStringConvertNSStringEncodingToEncoding(NSUTF8StringEncoding)));
+}
+
+- (NSString *)createUUID
+{
+    NSString *result;
+    CFUUIDRef uuid;
+    CFStringRef uuidStr;
+    uuid = CFUUIDCreate(NULL);
+    uuidStr = CFUUIDCreateString(NULL, uuid);
+    result =[NSString stringWithFormat:@"%@",uuidStr];
+    CFRelease(uuidStr);
+    CFRelease(uuid);
+    return result;
 }
 
 @end

@@ -24,7 +24,6 @@
 		8065F44D6E7FCB01968B8406 /* Pods_AESDemo_Tests.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 23E57826A17928B2B392846C /* Pods_AESDemo_Tests.framework */; };
 		873B8AEB1B1F5CCA007FD442 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 873B8AEA1B1F5CCA007FD442 /* Main.storyboard */; };
 		A052211E9B9DF8B0F12A10B6 /* Pods_AESDemo_Example.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 6C072C8EF8EE776A5FE12928 /* Pods_AESDemo_Example.framework */; };
-		FA7D6BC41F35711300A24620 /* .gitignore in Resources */ = {isa = PBXBuildFile; fileRef = FA7D6BB91F35711300A24620 /* .gitignore */; };
 		FA7D6C0F1F3822D400A24620 /* CocoaSecurity.m in Sources */ = {isa = PBXBuildFile; fileRef = FA7D6C0E1F3822D400A24620 /* CocoaSecurity.m */; };
 		FA7D6C121F3825EC00A24620 /* Base64.m in Sources */ = {isa = PBXBuildFile; fileRef = FA7D6C111F3825EC00A24620 /* Base64.m */; };
 /* End PBXBuildFile section */
@@ -70,7 +69,6 @@
 		873B8AEA1B1F5CCA007FD442 /* Main.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; name = Main.storyboard; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
 		A930046DE4315C1720BFAEB9 /* README.md */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = net.daringfireball.markdown; name = README.md; path = ../README.md; sourceTree = "<group>"; };
 		EA4792989603BDF79C432C75 /* Pods-AESDemo_Tests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-AESDemo_Tests.release.xcconfig"; path = "Pods/Target Support Files/Pods-AESDemo_Tests/Pods-AESDemo_Tests.release.xcconfig"; sourceTree = "<group>"; };
-		FA7D6BB91F35711300A24620 /* .gitignore */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = .gitignore; sourceTree = "<group>"; };
 		FA7D6C0D1F3822D400A24620 /* CocoaSecurity.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CocoaSecurity.h; sourceTree = "<group>"; };
 		FA7D6C0E1F3822D400A24620 /* CocoaSecurity.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CocoaSecurity.m; sourceTree = "<group>"; };
 		FA7D6C101F3825EC00A24620 /* Base64.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Base64.h; sourceTree = "<group>"; };
@@ -212,7 +210,6 @@
 				FA7D6C111F3825EC00A24620 /* Base64.m */,
 				FA7D6C0D1F3822D400A24620 /* CocoaSecurity.h */,
 				FA7D6C0E1F3822D400A24620 /* CocoaSecurity.m */,
-				FA7D6BB91F35711300A24620 /* .gitignore */,
 			);
 			path = AESCrypt;
 			sourceTree = "<group>";
@@ -300,7 +297,6 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				FA7D6BC41F35711300A24620 /* .gitignore in Resources */,
 				873B8AEB1B1F5CCA007FD442 /* Main.storyboard in Resources */,
 				71719F9F1E33DC2100824A3D /* LaunchScreen.storyboard in Resources */,
 				6003F5A9195388D20070C39A /* Images.xcassets in Resources */,

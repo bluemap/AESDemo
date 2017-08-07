@@ -28,7 +28,7 @@
 #pragma mark AES Encrypt 128, 192, 256
 + (CocoaSecurityResult *)aesEncrypt:(NSString *)data hexKey:(NSString *)key hexIv:(NSString *)iv
 {
-    CocoaSecurityDecoder *decoder = [CocoaSecurityDecoder new];
+    //CocoaSecurityDecoder *decoder = [CocoaSecurityDecoder new];
     //NSData *aesKey = [decoder hex:key];
     //NSData *aesIv = [decoder hex:iv];
     NSData *aesKey = [key dataUsingEncoding:NSUTF8StringEncoding];
@@ -98,7 +98,7 @@
 #pragma mark AES Decrypt 128, 192, 256
 + (CocoaSecurityResult *)aesDecryptWithBase64:(NSString *)data hexKey:(NSString *)key hexIv:(NSString *)iv
 {
-    CocoaSecurityDecoder *decoder = [CocoaSecurityDecoder new];
+    //CocoaSecurityDecoder *decoder = [CocoaSecurityDecoder new];
     //NSData *aesKey = [decoder hex:key];
     //NSData *aesIv = [decoder hex:iv];
     NSData *aesKey = [key dataUsingEncoding:NSUTF8StringEncoding];
